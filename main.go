@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 	"sync"
 )
 
@@ -18,7 +19,8 @@ func main() {
 }
 
 func tcpListener() {
-	tcpListener, err := net.Listen("tcp", ":8088")
+	port := getEnvWithDefault("IP_KAKUNIN_TCP_PORT", "8000")
+	tcpListener, err := net.Listen("tcp", ":"+port)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -53,7 +55,8 @@ func tcpHandler(conn net.Conn) error {
 }
 
 func udpListener() {
-	udpAddr, err := net.ResolveUDPAddr("udp", ":8089")
+	port := getEnvWithDefault("IP_KAKUNIN_TCP_PORT", "8001")
+	udpAddr, err := net.ResolveUDPAddr("udp", ":"+port)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,4 +85,13 @@ func udpHandler(conn *net.UDPConn) error {
 	fmt.Printf("[UDP] data from %s: %s\n", addr.String(), buffer[:n])
 
 	return nil
+}
+
+func getEnvWithDefault(key string, defaultValue string) string {
+	ret := os.Getenv(key)
+	if ret == "" {
+		ret = defaultValue
+	}
+
+	return ret
 }
