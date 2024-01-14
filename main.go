@@ -18,7 +18,7 @@ func main() {
 }
 
 func tcpListener() {
-	tcpListener, err := net.Listen("tcp", "localhost:8088")
+	tcpListener, err := net.Listen("tcp", ":8088")
 	if err != nil {
 		log.Fatal(err)
 	}
